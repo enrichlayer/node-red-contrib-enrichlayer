@@ -1,0 +1,316 @@
+<script type="text/javascript">
+    RED.nodes.registerType('enrichlayer-search', {
+        category: 'Enrich Layer',
+        color: '#6366F1',
+        defaults: {
+            name: { value: '' },
+            config: { value: '', type: 'enrichlayer-config', required: true },
+            operation: { value: 'searchCompanies' },
+            country: { value: '' },
+            region: { value: '' },
+            city: { value: '' },
+            company_type: { value: '' },
+            follower_count_min: { value: '' },
+            follower_count_max: { value: '' },
+            name_search: { value: '' },
+            description_search: { value: '' },
+            industry: { value: '' },
+            primary_industry: { value: '' },
+            specialities: { value: '' },
+            employee_count_category: { value: '' },
+            employee_count_min: { value: '' },
+            employee_count_max: { value: '' },
+            founded_after_year: { value: '' },
+            founded_before_year: { value: '' },
+            funding_amount_min: { value: '' },
+            funding_amount_max: { value: '' },
+            funding_raised_after: { value: '' },
+            funding_raised_before: { value: '' },
+            page_size: { value: '' },
+            enrich_profiles: { value: '' },
+            use_cache: { value: '' },
+            first_name: { value: '' },
+            last_name: { value: '' },
+            education_field_of_study: { value: '' },
+            education_degree_name: { value: '' },
+            education_school_name: { value: '' },
+            education_school_profile_url: { value: '' },
+            current_role_title: { value: '' },
+            past_role_title: { value: '' },
+            current_role_before: { value: '' },
+            current_role_after: { value: '' },
+            current_company_profile_url: { value: '' },
+            past_company_profile_url: { value: '' },
+            current_job_description: { value: '' },
+            past_job_description: { value: '' },
+            current_company_name: { value: '' },
+            past_company_name: { value: '' },
+            groups: { value: '' },
+            languages: { value: '' },
+            headline: { value: '' },
+            summary: { value: '' },
+            industries: { value: '' },
+            interests: { value: '' },
+            skills: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'enrichlayer.svg',
+        label: function () {
+            var ops = {
+                searchCompanies: 'Search Companies',
+                searchPeople: 'Search People'
+            };
+            return this.name || 'Search: ' + (ops[this.operation] || this.operation);
+        },
+        paletteLabel: 'search',
+        oneditprepare: function () {
+            var opFields = {
+                searchCompanies: ['country', 'region', 'city', 'company_type', 'follower_count_min', 'follower_count_max', 'name_search', 'industry', 'primary_industry', 'specialities', 'employee_count_category', 'employee_count_min', 'employee_count_max', 'description_search', 'founded_after_year', 'founded_before_year', 'funding_amount_min', 'funding_amount_max', 'funding_raised_after', 'funding_raised_before', 'page_size', 'enrich_profiles', 'use_cache'],
+                searchPeople: ['country', 'first_name', 'last_name', 'education_field_of_study', 'education_degree_name', 'education_school_name', 'education_school_profile_url', 'current_role_title', 'past_role_title', 'current_role_before', 'current_role_after', 'current_company_profile_url', 'past_company_profile_url', 'current_job_description', 'past_job_description', 'current_company_name', 'past_company_name', 'groups', 'languages', 'region', 'city', 'headline', 'summary', 'industries', 'interests', 'skills', 'page_size', 'enrich_profiles', 'use_cache']
+            };
+            function showFields() {
+                var op = $('#node-input-operation').val();
+                $('.el-field').hide();
+                var fields = opFields[op] || [];
+                fields.forEach(function (f) { $('.el-field-' + f).show(); });
+            }
+            $('#node-input-operation').on('change', showFields);
+            showFields();
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="enrichlayer-search">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> Config</label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-operation"><i class="fa fa-tasks"></i> Operation</label>
+        <select id="node-input-operation">
+            <option value="searchCompanies">Search Companies (3 credits/URL)</option>
+            <option value="searchPeople">Search People (3 credits/URL)</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-country">
+        <label for="node-input-country"><i class="fa fa-globe"></i> Country</label>
+        <input type="text" id="node-input-country" placeholder="US">
+    </div>
+    <div class="form-row el-field el-field-region">
+        <label for="node-input-region"><i class="fa fa-map"></i> Region</label>
+        <input type="text" id="node-input-region" placeholder='Maryland OR "New York"'>
+    </div>
+    <div class="form-row el-field el-field-city">
+        <label for="node-input-city"><i class="fa fa-map-marker"></i> City</label>
+        <input type="text" id="node-input-city" placeholder='"Los Angeles"'>
+    </div>
+    <div class="form-row el-field el-field-company_type">
+        <label for="node-input-company_type"><i class="fa fa-building"></i> Company Type</label>
+        <select id="node-input-company_type">
+            <option value="">Any</option>
+            <option value="EDUCATIONAL">Educational</option>
+            <option value="GOVERNMENT_AGENCY">Government Agency</option>
+            <option value="NON_PROFIT">Non Profit</option>
+            <option value="PARTNERSHIP">Partnership</option>
+            <option value="PRIVATELY_HELD">Privately Held</option>
+            <option value="PUBLIC_COMPANY">Public Company</option>
+            <option value="SELF_EMPLOYED">Self Employed</option>
+            <option value="SELF_OWNED">Self Owned</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-follower_count_min">
+        <label for="node-input-follower_count_min"><i class="fa fa-users"></i> Followers Min</label>
+        <input type="text" id="node-input-follower_count_min" placeholder="1000">
+    </div>
+    <div class="form-row el-field el-field-follower_count_max">
+        <label for="node-input-follower_count_max"><i class="fa fa-users"></i> Followers Max</label>
+        <input type="text" id="node-input-follower_count_max" placeholder="10000">
+    </div>
+    <div class="form-row el-field el-field-name_search">
+        <label for="node-input-name_search"><i class="fa fa-building"></i> Company Name</label>
+        <input type="text" id="node-input-name_search" placeholder="circle || amelex">
+    </div>
+    <div class="form-row el-field el-field-industry">
+        <label for="node-input-industry"><i class="fa fa-industry"></i> Industry</label>
+        <input type="text" id="node-input-industry" placeholder="technology || manufacturing">
+    </div>
+    <div class="form-row el-field el-field-primary_industry">
+        <label for="node-input-primary_industry"><i class="fa fa-industry"></i> Primary Industry</label>
+        <input type="text" id="node-input-primary_industry" placeholder="software development">
+    </div>
+    <div class="form-row el-field el-field-specialities">
+        <label for="node-input-specialities"><i class="fa fa-star"></i> Specialities</label>
+        <input type="text" id="node-input-specialities" placeholder="innovative product development">
+    </div>
+    <div class="form-row el-field el-field-employee_count_category">
+        <label for="node-input-employee_count_category"><i class="fa fa-users"></i> Size Category</label>
+        <select id="node-input-employee_count_category">
+            <option value="">Any</option>
+            <option value="startup">Startup</option>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+            <option value="enterprise">Enterprise</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-employee_count_min">
+        <label for="node-input-employee_count_min"><i class="fa fa-users"></i> Employees Min</label>
+        <input type="text" id="node-input-employee_count_min" placeholder="100">
+    </div>
+    <div class="form-row el-field el-field-employee_count_max">
+        <label for="node-input-employee_count_max"><i class="fa fa-users"></i> Employees Max</label>
+        <input type="text" id="node-input-employee_count_max" placeholder="1000">
+    </div>
+    <div class="form-row el-field el-field-description_search">
+        <label for="node-input-description_search"><i class="fa fa-file-text"></i> Description</label>
+        <input type="text" id="node-input-description_search" placeholder="navy or naval">
+    </div>
+    <div class="form-row el-field el-field-founded_after_year">
+        <label for="node-input-founded_after_year"><i class="fa fa-calendar"></i> Founded After</label>
+        <input type="text" id="node-input-founded_after_year" placeholder="1985">
+    </div>
+    <div class="form-row el-field el-field-founded_before_year">
+        <label for="node-input-founded_before_year"><i class="fa fa-calendar"></i> Founded Before</label>
+        <input type="text" id="node-input-founded_before_year" placeholder="2015">
+    </div>
+    <div class="form-row el-field el-field-funding_amount_min">
+        <label for="node-input-funding_amount_min"><i class="fa fa-money"></i> Funding Min</label>
+        <input type="text" id="node-input-funding_amount_min" placeholder="1000000">
+    </div>
+    <div class="form-row el-field el-field-funding_amount_max">
+        <label for="node-input-funding_amount_max"><i class="fa fa-money"></i> Funding Max</label>
+        <input type="text" id="node-input-funding_amount_max" placeholder="1000000">
+    </div>
+    <div class="form-row el-field el-field-funding_raised_after">
+        <label for="node-input-funding_raised_after"><i class="fa fa-calendar"></i> Funded After</label>
+        <input type="text" id="node-input-funding_raised_after" placeholder="2019-12-30">
+    </div>
+    <div class="form-row el-field el-field-funding_raised_before">
+        <label for="node-input-funding_raised_before"><i class="fa fa-calendar"></i> Funded Before</label>
+        <input type="text" id="node-input-funding_raised_before" placeholder="2019-12-30">
+    </div>
+    <div class="form-row el-field el-field-first_name">
+        <label for="node-input-first_name"><i class="fa fa-user"></i> First Name</label>
+        <input type="text" id="node-input-first_name" placeholder="Bill OR Mark">
+    </div>
+    <div class="form-row el-field el-field-last_name">
+        <label for="node-input-last_name"><i class="fa fa-user"></i> Last Name</label>
+        <input type="text" id="node-input-last_name" placeholder="Gates or Zuckerberg">
+    </div>
+    <div class="form-row el-field el-field-education_field_of_study">
+        <label for="node-input-education_field_of_study"><i class="fa fa-graduation-cap"></i> Field of Study</label>
+        <input type="text" id="node-input-education_field_of_study" placeholder="computer science">
+    </div>
+    <div class="form-row el-field el-field-education_degree_name">
+        <label for="node-input-education_degree_name"><i class="fa fa-graduation-cap"></i> Degree</label>
+        <input type="text" id="node-input-education_degree_name" placeholder="MBA">
+    </div>
+    <div class="form-row el-field el-field-education_school_name">
+        <label for="node-input-education_school_name"><i class="fa fa-university"></i> School Name</label>
+        <input type="text" id="node-input-education_school_name" placeholder='"Harvard University"'>
+    </div>
+    <div class="form-row el-field el-field-education_school_profile_url">
+        <label for="node-input-education_school_profile_url"><i class="fa fa-link"></i> School URL</label>
+        <input type="text" id="node-input-education_school_profile_url" placeholder="School profile URL">
+    </div>
+    <div class="form-row el-field el-field-current_role_title">
+        <label for="node-input-current_role_title"><i class="fa fa-briefcase"></i> Current Role</label>
+        <input type="text" id="node-input-current_role_title" placeholder="CEO || Founder">
+    </div>
+    <div class="form-row el-field el-field-past_role_title">
+        <label for="node-input-past_role_title"><i class="fa fa-briefcase"></i> Past Role</label>
+        <input type="text" id="node-input-past_role_title" placeholder="founder">
+    </div>
+    <div class="form-row el-field el-field-current_role_before">
+        <label for="node-input-current_role_before"><i class="fa fa-calendar"></i> Role Before</label>
+        <input type="text" id="node-input-current_role_before" placeholder="2019-12-30">
+    </div>
+    <div class="form-row el-field el-field-current_role_after">
+        <label for="node-input-current_role_after"><i class="fa fa-calendar"></i> Role After</label>
+        <input type="text" id="node-input-current_role_after" placeholder="2019-12-30">
+    </div>
+    <div class="form-row el-field el-field-current_company_profile_url">
+        <label for="node-input-current_company_profile_url"><i class="fa fa-link"></i> Current Co.</label>
+        <input type="text" id="node-input-current_company_profile_url" placeholder="Company profile URL">
+    </div>
+    <div class="form-row el-field el-field-past_company_profile_url">
+        <label for="node-input-past_company_profile_url"><i class="fa fa-link"></i> Past Co.</label>
+        <input type="text" id="node-input-past_company_profile_url" placeholder="Company profile URL">
+    </div>
+    <div class="form-row el-field el-field-current_job_description">
+        <label for="node-input-current_job_description"><i class="fa fa-file-text"></i> Current Job Desc</label>
+        <input type="text" id="node-input-current_job_description" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-past_job_description">
+        <label for="node-input-past_job_description"><i class="fa fa-file-text"></i> Past Job Desc</label>
+        <input type="text" id="node-input-past_job_description" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-current_company_name">
+        <label for="node-input-current_company_name"><i class="fa fa-building"></i> Current Co. Name</label>
+        <input type="text" id="node-input-current_company_name" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-past_company_name">
+        <label for="node-input-past_company_name"><i class="fa fa-building"></i> Past Co. Name</label>
+        <input type="text" id="node-input-past_company_name" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-groups">
+        <label for="node-input-groups"><i class="fa fa-users"></i> Groups</label>
+        <input type="text" id="node-input-groups" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-languages">
+        <label for="node-input-languages"><i class="fa fa-language"></i> Languages</label>
+        <input type="text" id="node-input-languages" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-headline">
+        <label for="node-input-headline"><i class="fa fa-header"></i> Headline</label>
+        <input type="text" id="node-input-headline" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-summary">
+        <label for="node-input-summary"><i class="fa fa-file-text"></i> Summary</label>
+        <input type="text" id="node-input-summary" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-industries">
+        <label for="node-input-industries"><i class="fa fa-industry"></i> Industries</label>
+        <input type="text" id="node-input-industries" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-interests">
+        <label for="node-input-interests"><i class="fa fa-heart"></i> Interests</label>
+        <input type="text" id="node-input-interests" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-skills">
+        <label for="node-input-skills"><i class="fa fa-star"></i> Skills</label>
+        <input type="text" id="node-input-skills" placeholder="Boolean search">
+    </div>
+    <div class="form-row el-field el-field-page_size">
+        <label for="node-input-page_size"><i class="fa fa-list-ol"></i> Page Size</label>
+        <input type="text" id="node-input-page_size" placeholder="10">
+    </div>
+    <div class="form-row el-field el-field-enrich_profiles">
+        <label for="node-input-enrich_profiles"><i class="fa fa-database"></i> Enrich</label>
+        <select id="node-input-enrich_profiles"><option value="">Default</option><option value="skip">Skip</option><option value="enrich">Enrich</option></select>
+    </div>
+    <div class="form-row el-field el-field-use_cache">
+        <label for="node-input-use_cache"><i class="fa fa-database"></i> Cache</label>
+        <select id="node-input-use_cache"><option value="">Dashboard Default</option><option value="if-present">If Present</option><option value="if-recent">If Recent (+1 credit)</option></select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="enrichlayer-search">
+    <p>Query Enrich Layer Search endpoints.</p>
+    <h3>Operations</h3>
+    <dl class="message-properties">
+        <dt>Search Companies <span class="property-type">3 credits/URL</span></dt>
+        <dd>Search for companies by criteria. All parameters are optional.</dd>
+        <dt>Search People <span class="property-type">3 credits/URL</span></dt>
+        <dd>Search for people by criteria. Country is required.</dd>
+    </dl>
+    <h3>Inputs</h3>
+    <p>Set parameters via <code>msg.payload</code> properties. Runtime values override node config.</p>
+    <h3>Outputs</h3>
+    <p><code>msg.payload</code> contains the API response object.</p>
+</script>

@@ -1,0 +1,139 @@
+<script type="text/javascript">
+    RED.nodes.registerType('enrichlayer-contact', {
+        category: 'Enrich Layer',
+        color: '#6366F1',
+        defaults: {
+            name: { value: '' },
+            config: { value: '', type: 'enrichlayer-config', required: true },
+            operation: { value: 'reverseEmailLookup' },
+            email: { value: '' },
+            phone_number: { value: '' },
+            profile_url: { value: '' },
+            twitter_profile_url: { value: '' },
+            facebook_profile_url: { value: '' },
+            lookup_depth: { value: '' },
+            enrich_profile: { value: '' },
+            callback_url: { value: '' },
+            page_size: { value: '' },
+            email_validation: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'enrichlayer.svg',
+        label: function () {
+            var ops = {
+                reverseEmailLookup: 'Reverse Email',
+                reversePhoneLookup: 'Reverse Phone',
+                lookupWorkEmail: 'Work Email',
+                getPersonalContact: 'Personal Contact',
+                getPersonalEmail: 'Personal Email',
+                checkDisposableEmail: 'Disposable Check'
+            };
+            return this.name || 'Contact: ' + (ops[this.operation] || this.operation);
+        },
+        paletteLabel: 'contact',
+        oneditprepare: function () {
+            var opFields = {
+                reverseEmailLookup: ['email', 'lookup_depth', 'enrich_profile'],
+                reversePhoneLookup: ['phone_number'],
+                lookupWorkEmail: ['profile_url', 'callback_url'],
+                getPersonalContact: ['profile_url', 'twitter_profile_url', 'facebook_profile_url', 'page_size'],
+                getPersonalEmail: ['profile_url', 'twitter_profile_url', 'facebook_profile_url', 'email_validation', 'page_size'],
+                checkDisposableEmail: ['email']
+            };
+            function showFields() {
+                var op = $('#node-input-operation').val();
+                $('.el-field').hide();
+                var fields = opFields[op] || [];
+                fields.forEach(function (f) { $('.el-field-' + f).show(); });
+            }
+            $('#node-input-operation').on('change', showFields);
+            showFields();
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="enrichlayer-contact">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> Config</label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-operation"><i class="fa fa-tasks"></i> Operation</label>
+        <select id="node-input-operation">
+            <option value="reverseEmailLookup">Reverse Email Lookup (3 credits)</option>
+            <option value="reversePhoneLookup">Reverse Phone Lookup (3 credits)</option>
+            <option value="lookupWorkEmail">Work Email Lookup (3 credits)</option>
+            <option value="getPersonalContact">Get Personal Contact (1 credit/contact)</option>
+            <option value="getPersonalEmail">Get Personal Email (1 credit/email)</option>
+            <option value="checkDisposableEmail">Check Disposable Email (0 credits)</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-email">
+        <label for="node-input-email"><i class="fa fa-envelope"></i> Email</label>
+        <input type="text" id="node-input-email" placeholder="johndoe@enrichlayer.com">
+    </div>
+    <div class="form-row el-field el-field-phone_number">
+        <label for="node-input-phone_number"><i class="fa fa-phone"></i> Phone Number</label>
+        <input type="text" id="node-input-phone_number" placeholder="+14155552671">
+    </div>
+    <div class="form-row el-field el-field-profile_url">
+        <label for="node-input-profile_url"><i class="fa fa-link"></i> Profile URL</label>
+        <input type="text" id="node-input-profile_url" placeholder="Professional network profile URL">
+    </div>
+    <div class="form-row el-field el-field-twitter_profile_url">
+        <label for="node-input-twitter_profile_url"><i class="fa fa-link"></i> Twitter URL</label>
+        <input type="text" id="node-input-twitter_profile_url" placeholder="https://x.com/enrichlayer">
+    </div>
+    <div class="form-row el-field el-field-facebook_profile_url">
+        <label for="node-input-facebook_profile_url"><i class="fa fa-link"></i> Facebook URL</label>
+        <input type="text" id="node-input-facebook_profile_url" placeholder="https://www.facebook.com/zuck">
+    </div>
+    <div class="form-row el-field el-field-lookup_depth">
+        <label for="node-input-lookup_depth"><i class="fa fa-search"></i> Depth</label>
+        <select id="node-input-lookup_depth"><option value="">Default</option><option value="superficial">Superficial</option><option value="deep">Deep</option></select>
+    </div>
+    <div class="form-row el-field el-field-enrich_profile">
+        <label for="node-input-enrich_profile"><i class="fa fa-database"></i> Enrich</label>
+        <select id="node-input-enrich_profile"><option value="">Default</option><option value="skip">Skip</option><option value="enrich">Enrich</option></select>
+    </div>
+    <div class="form-row el-field el-field-callback_url">
+        <label for="node-input-callback_url"><i class="fa fa-link"></i> Callback URL</label>
+        <input type="text" id="node-input-callback_url" placeholder="https://your-webhook.com/callback">
+    </div>
+    <div class="form-row el-field el-field-email_validation">
+        <label for="node-input-email_validation"><i class="fa fa-check"></i> Validation</label>
+        <select id="node-input-email_validation"><option value="">Default</option><option value="none">None</option><option value="fast">Fast</option><option value="precise">Precise</option></select>
+    </div>
+    <div class="form-row el-field el-field-page_size">
+        <label for="node-input-page_size"><i class="fa fa-list-ol"></i> Page Size</label>
+        <input type="text" id="node-input-page_size" placeholder="0">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="enrichlayer-contact">
+    <p>Query Enrich Layer Contact endpoints.</p>
+    <h3>Operations</h3>
+    <dl class="message-properties">
+        <dt>Reverse Email Lookup <span class="property-type">3 credits</span></dt>
+        <dd>Look up a profile by email address.</dd>
+        <dt>Reverse Phone Lookup <span class="property-type">3 credits</span></dt>
+        <dd>Look up a profile by phone number.</dd>
+        <dt>Work Email Lookup <span class="property-type">3 credits</span></dt>
+        <dd>Get the work email of a person.</dd>
+        <dt>Get Personal Contact <span class="property-type">1 credit/contact</span></dt>
+        <dd>Get personal contact numbers of a person.</dd>
+        <dt>Get Personal Email <span class="property-type">1 credit/email</span></dt>
+        <dd>Get personal email addresses of a person.</dd>
+        <dt>Check Disposable Email <span class="property-type">0 credits</span></dt>
+        <dd>Check if an email address is disposable.</dd>
+    </dl>
+    <h3>Inputs</h3>
+    <p>Set parameters via <code>msg.payload</code> properties. Runtime values override node config.</p>
+    <h3>Outputs</h3>
+    <p><code>msg.payload</code> contains the API response object.</p>
+</script>

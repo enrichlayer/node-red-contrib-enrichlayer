@@ -1,0 +1,124 @@
+<script type="text/javascript">
+    RED.nodes.registerType('enrichlayer-school', {
+        category: 'Enrich Layer',
+        color: '#6366F1',
+        defaults: {
+            name: { value: '' },
+            config: { value: '', type: 'enrichlayer-config', required: true },
+            operation: { value: 'getSchoolProfile' },
+            url: { value: '' },
+            school_url: { value: '' },
+            use_cache: { value: '' },
+            live_fetch: { value: '' },
+            boolean_search_keyword: { value: '' },
+            country: { value: '' },
+            enrich_profiles: { value: '' },
+            page_size: { value: '' },
+            resolve_numeric_id: { value: '' },
+            sort_by: { value: '' },
+            student_status: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'enrichlayer.svg',
+        label: function () {
+            var ops = {
+                getSchoolProfile: 'Get Profile',
+                listStudents: 'List Students'
+            };
+            return this.name || 'School: ' + (ops[this.operation] || this.operation);
+        },
+        paletteLabel: 'school',
+        oneditprepare: function () {
+            var opFields = {
+                getSchoolProfile: ['url', 'use_cache', 'live_fetch'],
+                listStudents: ['school_url', 'boolean_search_keyword', 'country', 'enrich_profiles', 'page_size', 'resolve_numeric_id', 'sort_by', 'student_status']
+            };
+            function showFields() {
+                var op = $('#node-input-operation').val();
+                $('.el-field').hide();
+                var fields = opFields[op] || [];
+                fields.forEach(function (f) { $('.el-field-' + f).show(); });
+            }
+            $('#node-input-operation').on('change', showFields);
+            showFields();
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="enrichlayer-school">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> Config</label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-operation"><i class="fa fa-tasks"></i> Operation</label>
+        <select id="node-input-operation">
+            <option value="getSchoolProfile">Get School Profile (1 credit)</option>
+            <option value="listStudents">List Students (3 credits/student)</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-url">
+        <label for="node-input-url"><i class="fa fa-link"></i> School URL</label>
+        <input type="text" id="node-input-url" placeholder="Professional network school URL">
+    </div>
+    <div class="form-row el-field el-field-school_url">
+        <label for="node-input-school_url"><i class="fa fa-link"></i> School URL</label>
+        <input type="text" id="node-input-school_url" placeholder="Professional network school URL">
+    </div>
+    <div class="form-row el-field el-field-use_cache">
+        <label for="node-input-use_cache"><i class="fa fa-database"></i> Cache</label>
+        <select id="node-input-use_cache"><option value="">Dashboard Default</option><option value="if-present">If Present</option><option value="if-recent">If Recent (+1 credit)</option></select>
+    </div>
+    <div class="form-row el-field el-field-live_fetch">
+        <label for="node-input-live_fetch"><i class="fa fa-refresh"></i> Live Fetch</label>
+        <select id="node-input-live_fetch"><option value="">Default</option><option value="default">Default</option><option value="force">Force (+9 credits)</option></select>
+    </div>
+    <div class="form-row el-field el-field-boolean_search_keyword">
+        <label for="node-input-boolean_search_keyword"><i class="fa fa-search"></i> Keyword</label>
+        <input type="text" id="node-input-boolean_search_keyword" placeholder="computer OR cs">
+    </div>
+    <div class="form-row el-field el-field-country">
+        <label for="node-input-country"><i class="fa fa-globe"></i> Country</label>
+        <input type="text" id="node-input-country" placeholder="us">
+    </div>
+    <div class="form-row el-field el-field-enrich_profiles">
+        <label for="node-input-enrich_profiles"><i class="fa fa-database"></i> Enrich</label>
+        <select id="node-input-enrich_profiles"><option value="">Default</option><option value="skip">Skip</option><option value="enrich">Enrich</option></select>
+    </div>
+    <div class="form-row el-field el-field-page_size">
+        <label for="node-input-page_size"><i class="fa fa-list-ol"></i> Page Size</label>
+        <input type="text" id="node-input-page_size" placeholder="10">
+    </div>
+    <div class="form-row el-field el-field-resolve_numeric_id">
+        <label for="node-input-resolve_numeric_id"><i class="fa fa-hashtag"></i> Numeric ID</label>
+        <select id="node-input-resolve_numeric_id"><option value="">Default</option><option value="false">False</option><option value="true">True</option></select>
+    </div>
+    <div class="form-row el-field el-field-sort_by">
+        <label for="node-input-sort_by"><i class="fa fa-sort"></i> Sort By</label>
+        <select id="node-input-sort_by"><option value="">Default</option><option value="recently-matriculated">Recently Matriculated</option><option value="recently-graduated">Recently Graduated</option><option value="none">None</option></select>
+    </div>
+    <div class="form-row el-field el-field-student_status">
+        <label for="node-input-student_status"><i class="fa fa-graduation-cap"></i> Status</label>
+        <select id="node-input-student_status"><option value="">Default</option><option value="current">Current</option><option value="past">Past</option><option value="all">All</option></select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="enrichlayer-school">
+    <p>Query Enrich Layer School endpoints.</p>
+    <h3>Operations</h3>
+    <dl class="message-properties">
+        <dt>Get School Profile <span class="property-type">1 credit</span></dt>
+        <dd>Get structured data of a School Profile.</dd>
+        <dt>List Students <span class="property-type">3 credits/student</span></dt>
+        <dd>List students of a school.</dd>
+    </dl>
+    <h3>Inputs</h3>
+    <p>Set parameters via <code>msg.payload</code> properties. Runtime values override node config.</p>
+    <h3>Outputs</h3>
+    <p><code>msg.payload</code> contains the API response object.</p>
+</script>

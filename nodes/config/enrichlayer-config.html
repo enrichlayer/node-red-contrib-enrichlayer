@@ -1,0 +1,43 @@
+<script type="text/javascript">
+    RED.nodes.registerType('enrichlayer-config', {
+        category: 'config',
+        defaults: {
+            name: { value: '' },
+            baseUrl: { value: 'https://enrichlayer.com' }
+        },
+        credentials: {
+            apiKey: { type: 'password' }
+        },
+        label: function () {
+            return this.name || 'Enrich Layer';
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="enrichlayer-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Enrich Layer">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-baseUrl"><i class="fa fa-globe"></i> Base URL</label>
+        <input type="text" id="node-config-input-baseUrl" placeholder="https://enrichlayer.com">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-apiKey"><i class="fa fa-key"></i> API Key</label>
+        <input type="password" id="node-config-input-apiKey" placeholder="Your Enrich Layer API key">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="enrichlayer-config">
+    <p>Configure your Enrich Layer API credentials.</p>
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>Name <span class="property-type">string</span></dt>
+        <dd>Optional label for this configuration.</dd>
+        <dt>Base URL <span class="property-type">string</span></dt>
+        <dd>API base URL. Default: <code>https://enrichlayer.com</code></dd>
+        <dt>API Key <span class="property-type">password</span></dt>
+        <dd>Your Enrich Layer API key. Get one at <a href="https://enrichlayer.com?utm_source=node-red&utm_medium=integration&utm_campaign=homepage" target="_blank">enrichlayer.com</a>.</dd>
+    </dl>
+</script>

@@ -1,0 +1,215 @@
+<script type="text/javascript">
+    RED.nodes.registerType('enrichlayer-company', {
+        category: 'Enrich Layer',
+        color: '#6366F1',
+        defaults: {
+            name: { value: '' },
+            config: { value: '', type: 'enrichlayer-config', required: true },
+            operation: { value: 'getCompanyProfile' },
+            url: { value: '' },
+            company_domain: { value: '' },
+            company_name: { value: '' },
+            id: { value: '' },
+            company_profile_url: { value: '' },
+            keyword_boolean: { value: '' },
+            categories: { value: '' },
+            funding_data: { value: '' },
+            exit_data: { value: '' },
+            acquisitions: { value: '' },
+            extra: { value: '' },
+            use_cache: { value: '' },
+            company_location: { value: '' },
+            enrich_profile: { value: '' },
+            enrich_profiles: { value: '' },
+            boolean_role_search: { value: '' },
+            coy_name_match: { value: '' },
+            country: { value: '' },
+            employment_status: { value: '' },
+            page_size: { value: '' },
+            resolve_numeric_id: { value: '' },
+            sort_by: { value: '' },
+            at_date: { value: '' },
+            estimated_employee_count: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'enrichlayer.svg',
+        label: function () {
+            var ops = {
+                getCompanyProfile: 'Get Profile',
+                lookupCompany: 'Lookup',
+                lookupCompanyById: 'ID Lookup',
+                getCompanyProfilePicture: 'Picture',
+                listEmployees: 'List Employees',
+                getEmployeeCount: 'Employee Count',
+                searchEmployees: 'Search Employees'
+            };
+            return this.name || 'Company: ' + (ops[this.operation] || this.operation);
+        },
+        paletteLabel: 'company',
+        oneditprepare: function () {
+            var opFields = {
+                getCompanyProfile: ['url', 'categories', 'funding_data', 'exit_data', 'acquisitions', 'extra', 'use_cache'],
+                lookupCompany: ['company_domain', 'company_name', 'company_location', 'enrich_profile'],
+                lookupCompanyById: ['id'],
+                getCompanyProfilePicture: ['company_profile_url'],
+                listEmployees: ['url', 'boolean_role_search', 'coy_name_match', 'country', 'employment_status', 'enrich_profiles', 'page_size', 'resolve_numeric_id', 'sort_by', 'use_cache'],
+                getEmployeeCount: ['url', 'at_date', 'coy_name_match', 'employment_status', 'estimated_employee_count', 'use_cache'],
+                searchEmployees: ['company_profile_url', 'keyword_boolean', 'country', 'enrich_profiles', 'page_size', 'resolve_numeric_id']
+            };
+            function showFields() {
+                var op = $('#node-input-operation').val();
+                $('.el-field').hide();
+                var fields = opFields[op] || [];
+                fields.forEach(function (f) { $('.el-field-' + f).show(); });
+            }
+            $('#node-input-operation').on('change', showFields);
+            showFields();
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="enrichlayer-company">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> Config</label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-operation"><i class="fa fa-tasks"></i> Operation</label>
+        <select id="node-input-operation">
+            <option value="getCompanyProfile">Get Company Profile (1 credit)</option>
+            <option value="lookupCompany">Lookup Company (2 credits)</option>
+            <option value="lookupCompanyById">Lookup Company by ID (0 credits)</option>
+            <option value="getCompanyProfilePicture">Get Profile Picture (0 credits)</option>
+            <option value="listEmployees">List Employees (3 credits/employee)</option>
+            <option value="getEmployeeCount">Get Employee Count (1 credit)</option>
+            <option value="searchEmployees">Search Employees (10 credits)</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-url">
+        <label for="node-input-url"><i class="fa fa-link"></i> Company URL</label>
+        <input type="text" id="node-input-url" placeholder="Professional network company URL">
+    </div>
+    <div class="form-row el-field el-field-company_domain">
+        <label for="node-input-company_domain"><i class="fa fa-globe"></i> Company Domain</label>
+        <input type="text" id="node-input-company_domain" placeholder="accenture.com">
+    </div>
+    <div class="form-row el-field el-field-company_name">
+        <label for="node-input-company_name"><i class="fa fa-building"></i> Company Name</label>
+        <input type="text" id="node-input-company_name" placeholder="Accenture">
+    </div>
+    <div class="form-row el-field el-field-id">
+        <label for="node-input-id"><i class="fa fa-hashtag"></i> Company ID</label>
+        <input type="text" id="node-input-id" placeholder="1441">
+    </div>
+    <div class="form-row el-field el-field-company_profile_url">
+        <label for="node-input-company_profile_url"><i class="fa fa-link"></i> Profile URL</label>
+        <input type="text" id="node-input-company_profile_url" placeholder="Professional network company URL">
+    </div>
+    <div class="form-row el-field el-field-keyword_boolean">
+        <label for="node-input-keyword_boolean"><i class="fa fa-search"></i> Keyword</label>
+        <input type="text" id="node-input-keyword_boolean" placeholder="ceo OR cto">
+    </div>
+    <div class="form-row el-field el-field-categories">
+        <label for="node-input-categories"><i class="fa fa-list"></i> Categories</label>
+        <select id="node-input-categories"><option value="">Default</option><option value="include">Include (+1 credit)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-funding_data">
+        <label for="node-input-funding_data"><i class="fa fa-money"></i> Funding Data</label>
+        <select id="node-input-funding_data"><option value="">Default</option><option value="include">Include (+1 credit)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-exit_data">
+        <label for="node-input-exit_data"><i class="fa fa-sign-out"></i> Exit Data</label>
+        <select id="node-input-exit_data"><option value="">Default</option><option value="include">Include (+1 credit)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-acquisitions">
+        <label for="node-input-acquisitions"><i class="fa fa-handshake-o"></i> Acquisitions</label>
+        <select id="node-input-acquisitions"><option value="">Default</option><option value="include">Include (+1 credit)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-extra">
+        <label for="node-input-extra"><i class="fa fa-plus-circle"></i> Extra</label>
+        <select id="node-input-extra"><option value="">Default</option><option value="include">Include (+1 credit)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-use_cache">
+        <label for="node-input-use_cache"><i class="fa fa-database"></i> Cache</label>
+        <select id="node-input-use_cache"><option value="">Dashboard Default</option><option value="if-present">If Present</option><option value="if-recent">If Recent (+1 credit)</option></select>
+    </div>
+    <div class="form-row el-field el-field-company_location">
+        <label for="node-input-company_location"><i class="fa fa-map-marker"></i> Location</label>
+        <input type="text" id="node-input-company_location" placeholder="sg">
+    </div>
+    <div class="form-row el-field el-field-enrich_profile">
+        <label for="node-input-enrich_profile"><i class="fa fa-database"></i> Enrich</label>
+        <select id="node-input-enrich_profile"><option value="">Default</option><option value="skip">Skip</option><option value="enrich">Enrich</option></select>
+    </div>
+    <div class="form-row el-field el-field-enrich_profiles">
+        <label for="node-input-enrich_profiles"><i class="fa fa-database"></i> Enrich Profiles</label>
+        <select id="node-input-enrich_profiles"><option value="">Default</option><option value="skip">Skip</option><option value="enrich">Enrich</option></select>
+    </div>
+    <div class="form-row el-field el-field-boolean_role_search">
+        <label for="node-input-boolean_role_search"><i class="fa fa-search"></i> Role Search</label>
+        <input type="text" id="node-input-boolean_role_search" placeholder='"founder" OR "co-founder"'>
+    </div>
+    <div class="form-row el-field el-field-coy_name_match">
+        <label for="node-input-coy_name_match"><i class="fa fa-check"></i> Name Match</label>
+        <select id="node-input-coy_name_match"><option value="">Default</option><option value="include">Include</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-country">
+        <label for="node-input-country"><i class="fa fa-globe"></i> Country</label>
+        <input type="text" id="node-input-country" placeholder="us">
+    </div>
+    <div class="form-row el-field el-field-employment_status">
+        <label for="node-input-employment_status"><i class="fa fa-briefcase"></i> Status</label>
+        <select id="node-input-employment_status"><option value="">Default</option><option value="current">Current</option><option value="past">Past</option><option value="all">All</option></select>
+    </div>
+    <div class="form-row el-field el-field-page_size">
+        <label for="node-input-page_size"><i class="fa fa-list-ol"></i> Page Size</label>
+        <input type="text" id="node-input-page_size" placeholder="10">
+    </div>
+    <div class="form-row el-field el-field-resolve_numeric_id">
+        <label for="node-input-resolve_numeric_id"><i class="fa fa-hashtag"></i> Numeric ID</label>
+        <select id="node-input-resolve_numeric_id"><option value="">Default</option><option value="false">False</option><option value="true">True</option></select>
+    </div>
+    <div class="form-row el-field el-field-sort_by">
+        <label for="node-input-sort_by"><i class="fa fa-sort"></i> Sort By</label>
+        <select id="node-input-sort_by"><option value="">Default</option><option value="recently-joined">Recently Joined</option><option value="recently-left">Recently Left</option><option value="oldest">Oldest</option><option value="none">None</option></select>
+    </div>
+    <div class="form-row el-field el-field-at_date">
+        <label for="node-input-at_date"><i class="fa fa-calendar"></i> At Date</label>
+        <input type="text" id="node-input-at_date" placeholder="2023-12-31">
+    </div>
+    <div class="form-row el-field el-field-estimated_employee_count">
+        <label for="node-input-estimated_employee_count"><i class="fa fa-calculator"></i> Estimated</label>
+        <select id="node-input-estimated_employee_count"><option value="">Default</option><option value="include">Include</option><option value="exclude">Exclude</option></select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="enrichlayer-company">
+    <p>Query Enrich Layer Company endpoints.</p>
+    <h3>Operations</h3>
+    <dl class="message-properties">
+        <dt>Get Company Profile <span class="property-type">1 credit</span></dt>
+        <dd>Get structured data of a Company Profile by URL.</dd>
+        <dt>Lookup Company <span class="property-type">2 credits</span></dt>
+        <dd>Look up a company by name or domain.</dd>
+        <dt>Lookup Company by ID <span class="property-type">0 credits</span></dt>
+        <dd>Look up a company by its internal numeric ID.</dd>
+        <dt>Get Profile Picture <span class="property-type">0 credits</span></dt>
+        <dd>Get the profile picture URL of a company.</dd>
+        <dt>List Employees <span class="property-type">3 credits/employee</span></dt>
+        <dd>List employees of a company.</dd>
+        <dt>Get Employee Count <span class="property-type">1 credit</span></dt>
+        <dd>Get the number of employees at a company.</dd>
+        <dt>Search Employees <span class="property-type">10 credits</span></dt>
+        <dd>Search employees by keyword at a company.</dd>
+    </dl>
+    <h3>Inputs</h3>
+    <p>Set parameters via <code>msg.payload</code> properties (e.g. <code>msg.payload.url</code>).
+       Runtime values override values set in the node config dialog.</p>
+    <h3>Outputs</h3>
+    <p><code>msg.payload</code> contains the API response object.</p>
+</script>

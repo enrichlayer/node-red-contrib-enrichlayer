@@ -1,0 +1,65 @@
+{
+  "name": "@verticalint-michael/node-red-contrib-enrichlayer",
+  "version": "0.1.0",
+  "description": "Node-RED nodes for the Enrich Layer API — enrich company, person, school, job, and contact profiles",
+  "keywords": [
+    "node-red",
+    "enrichlayer",
+    "enrich layer",
+    "data enrichment",
+    "company profiles",
+    "person profiles",
+    "professional networks",
+    "lead enrichment",
+    "contact enrichment"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Michael Salzinger",
+    "url": "https://enrichlayer.com?utm_source=node-red&utm_medium=integration&utm_campaign=homepage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enrichlayer/node-red-contrib-enrichlayer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/enrichlayer/node-red-contrib-enrichlayer/issues"
+  },
+  "homepage": "https://github.com/enrichlayer/node-red-contrib-enrichlayer#readme",
+  "node-red": {
+    "version": ">=2.0.0",
+    "nodes": {
+      "enrichlayer-config": "nodes/config/enrichlayer-config.js",
+      "enrichlayer-company": "nodes/company/enrichlayer-company.js",
+      "enrichlayer-person": "nodes/person/enrichlayer-person.js",
+      "enrichlayer-contact": "nodes/contact/enrichlayer-contact.js",
+      "enrichlayer-school": "nodes/school/enrichlayer-school.js",
+      "enrichlayer-job": "nodes/job/enrichlayer-job.js",
+      "enrichlayer-search": "nodes/search/enrichlayer-search.js",
+      "enrichlayer-meta": "nodes/meta/enrichlayer-meta.js"
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.7.0",
+    "nock": "^13.5.0",
+    "node-red": "^3.1.0",
+    "node-red-node-test-helper": "^0.3.4",
+    "should": "^13.2.3"
+  },
+  "scripts": {
+    "test": "mocha \"test/**/*_spec.js\" --timeout 10000 --exit"
+  },
+  "files": [
+    "nodes/",
+    "lib/",
+    "icons/",
+    "README.md",
+    "LICENSE"
+  ]
+}

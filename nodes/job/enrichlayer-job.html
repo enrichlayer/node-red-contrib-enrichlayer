@@ -1,0 +1,143 @@
+<script type="text/javascript">
+    RED.nodes.registerType('enrichlayer-job', {
+        category: 'Enrich Layer',
+        color: '#6366F1',
+        defaults: {
+            name: { value: '' },
+            config: { value: '', type: 'enrichlayer-config', required: true },
+            operation: { value: 'getJobProfile' },
+            url: { value: '' },
+            search_id: { value: '' },
+            job_type: { value: '' },
+            experience_level: { value: '' },
+            when: { value: '' },
+            flexibility: { value: '' },
+            geo_id: { value: '' },
+            keyword: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'enrichlayer.svg',
+        label: function () {
+            var ops = {
+                getJobProfile: 'Get Profile',
+                searchJobs: 'Search Jobs',
+                getJobCount: 'Job Count'
+            };
+            return this.name || 'Job: ' + (ops[this.operation] || this.operation);
+        },
+        paletteLabel: 'job',
+        oneditprepare: function () {
+            var opFields = {
+                getJobProfile: ['url'],
+                searchJobs: ['search_id', 'job_type', 'experience_level', 'when', 'flexibility', 'geo_id', 'keyword'],
+                getJobCount: ['search_id', 'job_type', 'experience_level', 'when', 'flexibility', 'geo_id', 'keyword']
+            };
+            function showFields() {
+                var op = $('#node-input-operation').val();
+                $('.el-field').hide();
+                var fields = opFields[op] || [];
+                fields.forEach(function (f) { $('.el-field-' + f).show(); });
+            }
+            $('#node-input-operation').on('change', showFields);
+            showFields();
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="enrichlayer-job">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> Config</label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-operation"><i class="fa fa-tasks"></i> Operation</label>
+        <select id="node-input-operation">
+            <option value="getJobProfile">Get Job Profile (2 credits)</option>
+            <option value="searchJobs">Search Jobs (2 credits)</option>
+            <option value="getJobCount">Get Job Count (2 credits)</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-url">
+        <label for="node-input-url"><i class="fa fa-link"></i> Job URL</label>
+        <input type="text" id="node-input-url" placeholder="Professional network job posting URL">
+    </div>
+    <div class="form-row el-field el-field-search_id">
+        <label for="node-input-search_id"><i class="fa fa-hashtag"></i> Search ID</label>
+        <input type="text" id="node-input-search_id" placeholder="2790400">
+    </div>
+    <div class="form-row el-field el-field-job_type">
+        <label for="node-input-job_type"><i class="fa fa-briefcase"></i> Job Type</label>
+        <select id="node-input-job_type">
+            <option value="">Any</option>
+            <option value="full-time">Full-Time</option>
+            <option value="part-time">Part-Time</option>
+            <option value="contract">Contract</option>
+            <option value="internship">Internship</option>
+            <option value="temporary">Temporary</option>
+            <option value="volunteer">Volunteer</option>
+            <option value="anything">Anything</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-experience_level">
+        <label for="node-input-experience_level"><i class="fa fa-star"></i> Experience</label>
+        <select id="node-input-experience_level">
+            <option value="">Any</option>
+            <option value="internship">Internship</option>
+            <option value="entry_level">Entry Level</option>
+            <option value="associate">Associate</option>
+            <option value="mid_senior_level">Mid-Senior</option>
+            <option value="director">Director</option>
+            <option value="anything">Anything</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-when">
+        <label for="node-input-when"><i class="fa fa-calendar"></i> When</label>
+        <select id="node-input-when">
+            <option value="">Any</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="past-week">Past Week</option>
+            <option value="past-month">Past Month</option>
+            <option value="anytime">Anytime</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-flexibility">
+        <label for="node-input-flexibility"><i class="fa fa-home"></i> Flexibility</label>
+        <select id="node-input-flexibility">
+            <option value="">Any</option>
+            <option value="remote">Remote</option>
+            <option value="on-site">On-Site</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="anything">Anything</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-geo_id">
+        <label for="node-input-geo_id"><i class="fa fa-map-marker"></i> Geo ID</label>
+        <input type="text" id="node-input-geo_id" placeholder="92000000">
+    </div>
+    <div class="form-row el-field el-field-keyword">
+        <label for="node-input-keyword"><i class="fa fa-search"></i> Keyword</label>
+        <input type="text" id="node-input-keyword" placeholder="engineer">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="enrichlayer-job">
+    <p>Query Enrich Layer Job endpoints.</p>
+    <h3>Operations</h3>
+    <dl class="message-properties">
+        <dt>Get Job Profile <span class="property-type">2 credits</span></dt>
+        <dd>Get structured data of a Job Profile.</dd>
+        <dt>Search Jobs <span class="property-type">2 credits</span></dt>
+        <dd>Search jobs at a company.</dd>
+        <dt>Get Job Count <span class="property-type">2 credits</span></dt>
+        <dd>Get the number of jobs at a company.</dd>
+    </dl>
+    <h3>Inputs</h3>
+    <p>Set parameters via <code>msg.payload</code> properties. Runtime values override node config.</p>
+    <h3>Outputs</h3>
+    <p><code>msg.payload</code> contains the API response object.</p>
+</script>

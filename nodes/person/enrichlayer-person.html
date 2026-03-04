@@ -1,0 +1,169 @@
+<script type="text/javascript">
+    RED.nodes.registerType('enrichlayer-person', {
+        category: 'Enrich Layer',
+        color: '#6366F1',
+        defaults: {
+            name: { value: '' },
+            config: { value: '', type: 'enrichlayer-config', required: true },
+            operation: { value: 'getPersonProfile' },
+            profile_url: { value: '' },
+            twitter_profile_url: { value: '' },
+            facebook_profile_url: { value: '' },
+            first_name: { value: '' },
+            company_domain: { value: '' },
+            last_name: { value: '' },
+            title: { value: '' },
+            location: { value: '' },
+            similarity_checks: { value: '' },
+            enrich_profile: { value: '' },
+            person_profile_url: { value: '' },
+            company_name: { value: '' },
+            role: { value: '' },
+            extra: { value: '' },
+            personal_contact_number: { value: '' },
+            personal_email: { value: '' },
+            skills: { value: '' },
+            use_cache: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'enrichlayer.svg',
+        label: function () {
+            var ops = {
+                getPersonProfile: 'Get Profile',
+                lookupPerson: 'Lookup',
+                getPersonProfilePicture: 'Picture',
+                lookupRole: 'Role Lookup'
+            };
+            return this.name || 'Person: ' + (ops[this.operation] || this.operation);
+        },
+        paletteLabel: 'person',
+        oneditprepare: function () {
+            var opFields = {
+                getPersonProfile: ['profile_url', 'twitter_profile_url', 'facebook_profile_url', 'extra', 'personal_contact_number', 'personal_email', 'skills', 'use_cache'],
+                lookupPerson: ['first_name', 'company_domain', 'last_name', 'title', 'location', 'similarity_checks', 'enrich_profile'],
+                getPersonProfilePicture: ['person_profile_url'],
+                lookupRole: ['company_name', 'role', 'enrich_profile']
+            };
+            function showFields() {
+                var op = $('#node-input-operation').val();
+                $('.el-field').hide();
+                var fields = opFields[op] || [];
+                fields.forEach(function (f) { $('.el-field-' + f).show(); });
+            }
+            $('#node-input-operation').on('change', showFields);
+            showFields();
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="enrichlayer-person">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> Config</label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-operation"><i class="fa fa-tasks"></i> Operation</label>
+        <select id="node-input-operation">
+            <option value="getPersonProfile">Get Person Profile (1 credit)</option>
+            <option value="lookupPerson">Lookup Person (2 credits)</option>
+            <option value="getPersonProfilePicture">Get Profile Picture (0 credits)</option>
+            <option value="lookupRole">Role Lookup (3 credits)</option>
+        </select>
+    </div>
+    <div class="form-row el-field el-field-profile_url">
+        <label for="node-input-profile_url"><i class="fa fa-link"></i> Profile URL</label>
+        <input type="text" id="node-input-profile_url" placeholder="Professional network profile URL">
+    </div>
+    <div class="form-row el-field el-field-twitter_profile_url">
+        <label for="node-input-twitter_profile_url"><i class="fa fa-link"></i> Twitter URL</label>
+        <input type="text" id="node-input-twitter_profile_url" placeholder="https://x.com/johnrmarty/">
+    </div>
+    <div class="form-row el-field el-field-facebook_profile_url">
+        <label for="node-input-facebook_profile_url"><i class="fa fa-link"></i> Facebook URL</label>
+        <input type="text" id="node-input-facebook_profile_url" placeholder="https://facebook.com/johnrmarty/">
+    </div>
+    <div class="form-row el-field el-field-first_name">
+        <label for="node-input-first_name"><i class="fa fa-user"></i> First Name</label>
+        <input type="text" id="node-input-first_name" placeholder="Bill">
+    </div>
+    <div class="form-row el-field el-field-company_domain">
+        <label for="node-input-company_domain"><i class="fa fa-globe"></i> Company Domain</label>
+        <input type="text" id="node-input-company_domain" placeholder="gatesfoundation.org">
+    </div>
+    <div class="form-row el-field el-field-last_name">
+        <label for="node-input-last_name"><i class="fa fa-user"></i> Last Name</label>
+        <input type="text" id="node-input-last_name" placeholder="Gates">
+    </div>
+    <div class="form-row el-field el-field-title">
+        <label for="node-input-title"><i class="fa fa-briefcase"></i> Title</label>
+        <input type="text" id="node-input-title" placeholder="Co-chair">
+    </div>
+    <div class="form-row el-field el-field-location">
+        <label for="node-input-location"><i class="fa fa-map-marker"></i> Location</label>
+        <input type="text" id="node-input-location" placeholder="Seattle">
+    </div>
+    <div class="form-row el-field el-field-similarity_checks">
+        <label for="node-input-similarity_checks"><i class="fa fa-check"></i> Similarity</label>
+        <select id="node-input-similarity_checks"><option value="">Default</option><option value="include">Include</option><option value="skip">Skip</option></select>
+    </div>
+    <div class="form-row el-field el-field-enrich_profile">
+        <label for="node-input-enrich_profile"><i class="fa fa-database"></i> Enrich</label>
+        <select id="node-input-enrich_profile"><option value="">Default</option><option value="skip">Skip</option><option value="enrich">Enrich</option></select>
+    </div>
+    <div class="form-row el-field el-field-person_profile_url">
+        <label for="node-input-person_profile_url"><i class="fa fa-link"></i> Profile URL</label>
+        <input type="text" id="node-input-person_profile_url" placeholder="Professional network profile URL">
+    </div>
+    <div class="form-row el-field el-field-company_name">
+        <label for="node-input-company_name"><i class="fa fa-building"></i> Company Name</label>
+        <input type="text" id="node-input-company_name" placeholder="enrichlayer">
+    </div>
+    <div class="form-row el-field el-field-role">
+        <label for="node-input-role"><i class="fa fa-id-badge"></i> Role</label>
+        <input type="text" id="node-input-role" placeholder="ceo">
+    </div>
+    <div class="form-row el-field el-field-extra">
+        <label for="node-input-extra"><i class="fa fa-plus-circle"></i> Extra</label>
+        <select id="node-input-extra"><option value="">Default</option><option value="include">Include (+1 credit)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-personal_contact_number">
+        <label for="node-input-personal_contact_number"><i class="fa fa-phone"></i> Contact #</label>
+        <select id="node-input-personal_contact_number"><option value="">Default</option><option value="include">Include (+1/number)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-personal_email">
+        <label for="node-input-personal_email"><i class="fa fa-envelope"></i> Personal Email</label>
+        <select id="node-input-personal_email"><option value="">Default</option><option value="include">Include (+1/email)</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-skills">
+        <label for="node-input-skills"><i class="fa fa-star"></i> Skills</label>
+        <select id="node-input-skills"><option value="">Default</option><option value="include">Include</option><option value="exclude">Exclude</option></select>
+    </div>
+    <div class="form-row el-field el-field-use_cache">
+        <label for="node-input-use_cache"><i class="fa fa-database"></i> Cache</label>
+        <select id="node-input-use_cache"><option value="">Dashboard Default</option><option value="if-present">If Present</option><option value="if-recent">If Recent (+1 credit)</option></select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="enrichlayer-person">
+    <p>Query Enrich Layer Person endpoints.</p>
+    <h3>Operations</h3>
+    <dl class="message-properties">
+        <dt>Get Person Profile <span class="property-type">1 credit</span></dt>
+        <dd>Get structured data of a Person Profile.</dd>
+        <dt>Lookup Person <span class="property-type">2 credits</span></dt>
+        <dd>Look up a person by name and company.</dd>
+        <dt>Get Profile Picture <span class="property-type">0 credits</span></dt>
+        <dd>Get the profile picture URL of a person.</dd>
+        <dt>Role Lookup <span class="property-type">3 credits</span></dt>
+        <dd>Look up a person by their role at a company.</dd>
+    </dl>
+    <h3>Inputs</h3>
+    <p>Set parameters via <code>msg.payload</code> properties. Runtime values override node config.</p>
+    <h3>Outputs</h3>
+    <p><code>msg.payload</code> contains the API response object.</p>
+</script>
